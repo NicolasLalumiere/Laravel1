@@ -183,7 +183,8 @@ footer {
                             <a href="index.php?controleur=utilisateurs&action=deconnecter"><small>[Se déconnecter]</small></a>
                         </h3>
                     <?php else : ?>
-                        <h3>[<a href="index.php?controleur=utilisateurs&action=connexion">Se connecter</a>]</h3>
+                        <h3>[<a href="{{ route('login') }}">Se connecter</a>]</h3>
+                        <h3>[<a href="{{ route('register') }}">S'enregistrer</a>]</h3>
                     <?php endif; ?>
 
     <h1>Bienvenue sur les carnets de voyages en ligne</h1>
