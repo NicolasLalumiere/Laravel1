@@ -193,10 +193,8 @@ footer {
 </header>
 
 <nav>
-    <a href="{{url('/')}}">Accueil</a>
-    <?php if (isset($utilisateur)) : ?>
-    <a href="index.php?controleur=voyages&action=ajouterFormulaire">Ajouter des infos</a>
-    <?php endif; ?>
+    <a href="{{url('/')}}">Accueil</a> 
+    <a href="{{url('/voyages/ajouter')}}">Ajouter des infos</a>
     <a href="{{url('/apropos')}}">À propos</a>
 </nav>
 

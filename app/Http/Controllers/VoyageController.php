@@ -32,7 +32,11 @@ class VoyageController extends Controller
      */
     public function create()
     {
-        return view('voyages.create');
+        $voyages = Voyage::all(); // Assure-toi d'importer ton modèle Voyage
+        $user = auth()->user(); // Récupère l'utilisateur connecté
+    
+        return view('ajouter', compact('voyages', 'user'));
+    
     }
 
     /**
@@ -43,7 +47,20 @@ class VoyageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        {
+            // Valider les données
+            $validatedData = $request->validate([
+                'pays' => 'required|string|max:255',
+                'jours' => 'required|integer',
+                'id_utilisateur' => 'required|integer',
+            ]);
+    
+            // Créer un nouveau voyage
+            Voyage::create($validatedData);
+    
+            // Rediriger vers une page ou afficher un message de succès
+            return redirect()->back()->with('success', 'Voyage ajouté avec succès!');
+        }
     }
 
     /**

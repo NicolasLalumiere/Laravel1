@@ -20,6 +20,9 @@ Route::get('/apropos', function () {
     return view('apropos');
 }); 
 
+Route::get('/voyages/ajouter', [VoyageController::class, 'create'])->name('voyages.ajouter');
+Route::post('/voyages/ajouter', [VoyageController::class, 'store'])->name('voyages.store');
+
 Route:: get ('/', [VoyageController::class, 'index']);
 
 Route::resources([
