@@ -169,7 +169,7 @@ footer {
         width: 100%;
     }
 }
-</style>
+    </style>
 </head>
 <body>
 
@@ -178,14 +178,40 @@ footer {
         <h3>TESTS</h3>
     </a>
 
-<?php if (isset($utilisateur)) : ?>
-                        <h3>Bonjour <?= $utilisateur['prenom'] ?>,
-                            <a href="index.php?controleur=utilisateurs&action=deconnecter"><small>[Se déconnecter]</small></a>
-                        </h3>
-                    <?php else : ?>
-                        <h3>[<a href="{{ route('login') }}">Se connecter</a>]</h3>
-                        <h3>[<a href="{{ route('register') }}">S'enregistrer</a>]</h3>
-                    <?php endif; ?>
+    @if (Auth::user()) {{-- accées au boutons d"enregistrement de connéexion et de déconnexion peu importe le rôle de l'utilisateur authentifié --}}
+                        @if (Auth::user()->role === 'ADMIN')
+                            {{-- Accées à l'espace admin Juste pour les ADMIN --}}
+                            <li class="nav-item">
+                                <a class="nav-link" href ="{{ route('articles.index') }}"> Espace Admin</a>
+                            </li>
+                        @endif
+                        <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            {{ __('Déconnexion') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <h2>
+                                Bonjour {{ Auth::user()->name }}
+                            </h2>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                          document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+
+                            
+                            </div>
+            
+                    @else
+                        <a class="nav-link" href="{{ route('login') }}">{{ __('Connexion') }}</a>
+                        <a class="nav-link" href="{{ route('register') }}">{{ __('Inscription') }}</a>
+
+                    @endif
 
     <h1>Bienvenue sur les carnets de voyages en ligne</h1>
     <p style="color: black;">Faites découvrir vos aventures autour du monde!</p>
@@ -194,7 +220,9 @@ footer {
 
 <nav>
     <a href="{{url('/')}}">Accueil</a> 
-    <a href="{{url('/voyages/ajouter')}}">Ajouter des infos</a>
+    @if (Auth::user())
+    <a href="{{ route('ajouter') }}">Ajouter des infos</a>
+    @endif
     <a href="{{url('/apropos')}}">À propos</a>
 </nav>
 
@@ -203,7 +231,7 @@ footer {
 </main>
 
 <footer>
-    <p>&copy; 2024 Mon Carnet de Voyage - Fait avec HTML5, CSS et PHP</p>
+    <p>&copy; 2024 Mon Carnet de Voyage - Fait avec HTML5, CSS et PHP et Laravel 8</p>
 </footer>
 
 </body>

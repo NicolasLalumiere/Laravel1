@@ -70,42 +70,24 @@
     }</style>
 
 <div class="container">
-    <h2>Ajoutez un voyage!</h2>
-    <form action="{{ route('voyages.store') }}" method="post">
-        @csrf
-        <p>
+        
+        <h2>Modifiez le voyage!</h2>
+        <form action="{{ route('voyages.update', $voyage->id) }}" method="post">
+            @csrf
+            @method('PUT')
+            <p>
             <label for="pays">Pays</label> :  
-            <input type="text" name="pays" id="pays" required /><br />
-            
+            <input type="text" name="pays" id="pays" value="{{ old('pays', $voyage->pays) }}" required /><br />
+
             <label for="jours">Jours</label> :  
-            <input type="text" name="jours" id="jours" required /><br />
+            <input type="text" name="jours" id="jours" value="{{ old('jours', $voyage->jours) }}" required /><br />
 
-            <input type="hidden" name="user_id" value="{{ $user->id }}" />  
-            
-            <input type="submit" value="Ajouter" />
-        </p>
-    </form>
-</div>
+            <input type="hidden" name="user_id" value="{{ $user->id }}" /> 
+            <input type="hidden" name="id" value="{{ $voyage->id }}" /> 
 
-<div class="container">
-    <h2>Ajoutez un transport pour un voyage!</h2>
-    <form action="{{ route('transports.store') }}" method="post">
-        @csrf
-        <p>
-            <label for="voyage_id">Voyage</label> :  
-            <select name="voyage_id" id="voyage_id" required>
-                @foreach ($voyagesUser as $voyage)
-                    <option value="{{ $voyage->id }}">
-                        {{ $voyage->pays }}
-                    </option>
-                @endforeach
-            </select><br />
-            
-            <label for="type">Type</label> :  
-            <input type="text" name="type" id="type" required /><br />                
-            <input type="submit" value="Ajouter" />
+            <input type="submit" value="Modifier" />
         </p>
-    </form>
-</div>
+</form>
+    </div>
 
 @endsection

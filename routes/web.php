@@ -16,20 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::resource('voyages', VoyageController::class);
+Route::resource('transports', TransportController::class);
+
 Route::get('/apropos', function () {
     return view('apropos');
-}); 
+});
 
-Route::get('/voyages/ajouter', [VoyageController::class, 'create'])->name('voyages.ajouter');
-Route::post('/voyages/ajouter', [VoyageController::class, 'store'])->name('voyages.store');
+Route::get('/ajouter', function () {
+    $user = Auth::user();
+    $voyagesUser = App\Models\Voyage::where('user_id', $user->id)->get();
+    return view('ajouter', compact('user', 'voyagesUser'));
+})->name('ajouter');
 
-Route:: get ('/', [VoyageController::class, 'index']);
-
-Route::resources([
-      'transports'=> TransportController::class,
-     ]);
-
-Route:: get ('/connexion', [VoyageController::class, 'index']);
 Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [VoyageController::class, 'index']);

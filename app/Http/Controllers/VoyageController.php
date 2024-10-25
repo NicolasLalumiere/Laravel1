@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Article;
 use App\Models\Voyage;
@@ -20,10 +21,16 @@ class VoyageController extends Controller
     public function index()
     {
         $voyages = Voyage::with('user')->get();
-
         $voyages = Voyage::paginate(5);
-        return view('voyages.index', compact('voyages'));
-    }
+        $user = auth()->user(); // Récupère l'utilisateur connecté
+        if ($user) {
+            // Si l'utilisateur est connecté
+            $voyages = Voyage::where('user_id', $user->id)->paginate(5);
+            return view('voyages.index', compact('voyages', 'user'));
+        } else {
+            return view('voyages.index', compact('voyages'));
+        }       
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -52,14 +59,14 @@ class VoyageController extends Controller
             $validatedData = $request->validate([
                 'pays' => 'required|string|max:255',
                 'jours' => 'required|integer',
-                'id_utilisateur' => 'required|integer',
+                'user_id' => 'required|integer',
             ]);
     
             // Créer un nouveau voyage
             Voyage::create($validatedData);
     
             // Rediriger vers une page ou afficher un message de succès
-            return redirect()->back()->with('success', 'Voyage ajouté avec succès!');
+            return redirect('/')->with('success', 'Voyage ajouté avec succès!');
         }
     }
 
@@ -82,7 +89,9 @@ class VoyageController extends Controller
      */
     public function edit($id)
     {
-        //
+        $voyage = Voyage::findOrFail($id); // Récupérer le voyage par ID
+        $user = Auth::user();
+        return view('modifier', compact('voyage', 'user')); // Passer le voyage à la vue
     }
 
     /**
@@ -94,7 +103,19 @@ class VoyageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+         // Valider les données
+        $validatedData = $request->validate([
+            'pays' => 'required|string|max:255',
+            'jours' => 'required|integer',
+            'user_id' => 'required|integer',
+        ]);
+
+        // Trouver le voyage par ID et mettre à jour les données
+        $voyage = Voyage::findOrFail($id);
+        $voyage->update($validatedData);
+
+    // Rediriger vers une page ou afficher un message de succès
+    return redirect('/')->with('success', 'Voyage modifié avec succès!');
     }
 
     /**
@@ -105,6 +126,13 @@ class VoyageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Trouver le voyage par son ID
+    $voyage = Voyage::findOrFail($id);
+
+    // Supprimer le voyage
+    $voyage->delete();
+
+    // Rediriger vers une page avec un message de succès
+    return redirect()->route('voyages.index')->with('success', 'Voyage supprimé avec succès!');
     }
 }
