@@ -179,12 +179,7 @@ footer {
     </a>
 
     @if (Auth::user()) {{-- accées au boutons d"enregistrement de connéexion et de déconnexion peu importe le rôle de l'utilisateur authentifié --}}
-                        @if (Auth::user()->role === 'ADMIN')
-                            {{-- Accées à l'espace admin Juste pour les ADMIN --}}
-                            <li class="nav-item">
-                                <a class="nav-link" href ="{{ route('articles.index') }}"> Espace Admin</a>
-                            </li>
-                        @endif
+                       
                         <a href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             {{ __('Déconnexion') }}
@@ -211,7 +206,7 @@ footer {
                         <a class="nav-link" href="{{ route('login') }}">{{ __('Connexion') }}</a>
                         <a class="nav-link" href="{{ route('register') }}">{{ __('Inscription') }}</a>
 
-                    @endif
+            @endif
 
     <h1>Bienvenue sur les carnets de voyages en ligne</h1>
     <p style="color: black;">Faites découvrir vos aventures autour du monde!</p>
@@ -224,6 +219,9 @@ footer {
     <a href="{{ route('ajouter') }}">Ajouter des infos</a>
     @endif
     <a href="{{url('/apropos')}}">À propos</a>
+    @if (Auth::user() && Auth::user()->role === 'ADMIN' && !Request::is('admin'))
+            <a href="{{ url('/admin') }}">Espace Admin</a>
+    @endif
 </nav>
 
 <main class="py-4">

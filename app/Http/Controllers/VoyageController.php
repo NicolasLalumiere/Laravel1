@@ -32,6 +32,15 @@ class VoyageController extends Controller
         }       
      }
 
+     public function indexAdmin()
+    {
+        $voyages = Voyage::with('user')->get();
+        $voyages = Voyage::paginate(5);
+        $user = auth()->user(); // Récupère l'utilisateur connecté
+            return view('voyages.indexAdmin', compact('voyages'));
+              
+     }
+
     /**
      * Show the form for creating a new resource.
      *

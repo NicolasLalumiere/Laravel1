@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
     
 @section('content')
@@ -19,17 +18,11 @@
                         <p>Aucun transport pour ce voyage.</p>
                  <?php endif; ?>
 
-            @if (Auth::user())
-                <form action="{{ route('voyages.edit', $voyage->id) }}" method="get" style="display:inline;">
-                    @csrf
-                    <button class="modifier" type="submit">Modifier</button>
-                </form>
                 <form action="{{ route('voyages.destroy', $voyage->id) }}" method="post" style="display:inline;">
                     @csrf
                     @method('DELETE') 
                     <button class="supprimer" type="submit">Supprimer</button>
                 </form>
-            @endif
 
             
         </p>

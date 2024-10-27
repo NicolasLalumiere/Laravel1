@@ -32,3 +32,4 @@ Route::get('/ajouter', function () {
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [VoyageController::class, 'index']);
+Route::get('/admin', [VoyageController::class, 'indexAdmin']);
