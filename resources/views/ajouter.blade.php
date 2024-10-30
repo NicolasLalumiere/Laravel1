@@ -70,29 +70,29 @@
     }</style>
 
 <div class="container">
-    <h2>Ajoutez un voyage!</h2>
+    <h2>@lang('general.Ajout voyage')</h2>
     <form action="{{ route('voyages.store') }}" method="post">
         @csrf
         <p>
-            <label for="pays">Pays</label> :  
+            <label for="pays">@lang('general.Pays')</label> :  
             <input type="text" name="pays" id="pays" required /><br />
             
-            <label for="jours">Jours</label> :  
+            <label for="jours">@lang('general.jours')</label> :  
             <input type="text" name="jours" id="jours" required /><br />
 
             <input type="hidden" name="user_id" value="{{ $user->id }}" />  
             
-            <input type="submit" value="Ajouter" />
+            <input type="submit" value=@lang('general.Ajouter') />
         </p>
     </form>
 </div>
 
 <div class="container">
-    <h2>Ajoutez un transport pour un voyage!</h2>
+    <h2>@lang('general.Ajout transport')</h2>
     <form action="{{ route('transports.store') }}" method="post">
         @csrf
         <p>
-            <label for="voyage_id">Voyage</label> :  
+            <label for="voyage_id">@lang('general.Voyage')</label> :  
             <select name="voyage_id" id="voyage_id" required>
                 @foreach ($voyagesUser as $voyage)
                     <option value="{{ $voyage->id }}">
@@ -101,9 +101,9 @@
                 @endforeach
             </select><br />
             
-            <label for="type">Type</label> :  
+            <label for="type">@lang('general.Type')</label> :  
             <input type="text" name="type" id="type" required /><br />                
-            <input type="submit" value="Ajouter" />
+            <input type="submit" value=@lang('general.Ajouter') />
         </p>
     </form>
 </div>

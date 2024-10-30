@@ -6,7 +6,7 @@
     <div class="voyage">
         <p>
             {{ $voyage->user->name }} : 
-            <em>{{ $voyage->pays }}</em>, {{ $voyage->jours }} jours
+            <em>{{ $voyage->pays }}</em>, {{ $voyage->jours }} @lang('general.jours')
             
             <?php if (!empty($voyage['transports'])): ?>
                 <ul>
@@ -14,14 +14,12 @@
                         <li><?= htmlspecialchars($transport['type']) ?></li>
                     <?php endforeach; ?>
                 </ul>
-                    <?php else: ?>
-                        <p>Aucun transport pour ce voyage.</p>
                  <?php endif; ?>
 
                 <form action="{{ route('voyages.destroy', $voyage->id) }}" method="post" style="display:inline;">
                     @csrf
                     @method('DELETE') 
-                    <button class="supprimer" type="submit">Supprimer</button>
+                    <button class="supprimer" type="submit">@lang('general.Supprimer')</button>
                 </form>
 
             

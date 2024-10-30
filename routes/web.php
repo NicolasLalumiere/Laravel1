@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('voyages', VoyageController::class);
 Route::resource('transports', TransportController::class);
+Route::get('lang/{locale}', [App\Http\Controllers\LocalizationController::class, 'index']);
+
 
 Route::get('/apropos', function () {
     return view('apropos');

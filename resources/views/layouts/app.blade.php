@@ -174,6 +174,29 @@ footer {
 <body>
 
 <header> 
+
+
+    <nav>
+    @php $locale = session()->get('applocale'); @endphp
+                    
+                            @switch($locale)
+                                @case('en')
+                                    English
+                                @break
+
+                                @case('fr')
+                                    Francais
+                                @break
+
+                                @default
+                                    English
+                            @endswitch
+        <a href="lang/fr">francais</a>
+        <a href="lang/en">english</a>
+        <a href="lang/es">espagnol</a>
+    </nav>
+
+
     <a href="tests.php">
         <h3>TESTS</h3>
     </a>
@@ -189,7 +212,7 @@ footer {
                                 @csrf
                             </form>
                             <h2>
-                                Bonjour {{ Auth::user()->name }}
+                            @lang('general.Bonjour') {{ Auth::user()->name }}
                             </h2>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -208,19 +231,19 @@ footer {
 
             @endif
 
-    <h1>Bienvenue sur les carnets de voyages en ligne</h1>
-    <p style="color: black;">Faites découvrir vos aventures autour du monde!</p>
+    <h1>@lang('general.Bienvenue')</h1>
+    <p style="color: black;">@lang('general.Decouvrir')</p>
    
 </header>
 
 <nav>
-    <a href="{{url('/')}}">Accueil</a> 
+    <a href="{{url('/')}}">@lang('general.Accueil')</a> 
     @if (Auth::user())
-    <a href="{{ route('ajouter') }}">Ajouter des infos</a>
+    <a href="{{ route('ajouter') }}">@lang('general.Ajouter des infos')</a>
     @endif
-    <a href="{{url('/apropos')}}">À propos</a>
+    <a href="{{url('/apropos')}}">@lang('general.A propos')</a>
     @if (Auth::user() && Auth::user()->role === 'ADMIN' && !Request::is('admin'))
-            <a href="{{ url('/admin') }}">Espace Admin</a>
+            <a href="{{ url('/admin') }}">@lang('general.Espace Admin')</a>
     @endif
 </nav>
 
@@ -229,7 +252,7 @@ footer {
 </main>
 
 <footer>
-    <p>&copy; 2024 Mon Carnet de Voyage - Fait avec HTML5, CSS et PHP et Laravel 8</p>
+    <p>@lang('general.footer')</p>
 </footer>
 
 </body>

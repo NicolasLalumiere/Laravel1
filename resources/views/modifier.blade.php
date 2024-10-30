@@ -71,21 +71,21 @@
 
 <div class="container">
         
-        <h2>Modifiez le voyage!</h2>
+        <h2>@lang('general.Modifier voyage')</h2>
         <form action="{{ route('voyages.update', $voyage->id) }}" method="post">
             @csrf
             @method('PUT')
             <p>
-            <label for="pays">Pays</label> :  
+            <label for="pays">@lang('general.Pays')</label> :  
             <input type="text" name="pays" id="pays" value="{{ old('pays', $voyage->pays) }}" required /><br />
 
-            <label for="jours">Jours</label> :  
+            <label for="jours">@lang('general.jours')</label> :  
             <input type="text" name="jours" id="jours" value="{{ old('jours', $voyage->jours) }}" required /><br />
 
             <input type="hidden" name="user_id" value="{{ $user->id }}" /> 
             <input type="hidden" name="id" value="{{ $voyage->id }}" /> 
 
-            <input type="submit" value="Modifier" />
+            <input type="submit" value=@lang('general.Modifier') />
         </p>
 </form>
     </div>
