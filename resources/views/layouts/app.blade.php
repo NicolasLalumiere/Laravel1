@@ -176,36 +176,21 @@ footer {
 <header> 
 
 
-    <nav>
-    @php $locale = session()->get('applocale'); @endphp
-                    
-                            @switch($locale)
-                                @case('en')
-                                    English
-                                @break
-
-                                @case('fr')
-                                    Francais
-                                @break
-
-                                @default
-                                    English
-                            @endswitch
-        <a href="lang/fr">francais</a>
-        <a href="lang/en">english</a>
-        <a href="lang/es">espagnol</a>
-    </nav>
-
+<nav>
+    <a href="{{ url('lang/fr') }}">Français</a>
+    <a href="{{ url('lang/en') }}">English</a>
+    <a href="{{ url('lang/es') }}">Español</a>
+</nav>
 
     <a href="tests.php">
-        <h3>TESTS</h3>
+        <h3>@lang('general.tests')</h3>
     </a>
 
     @if (Auth::user()) {{-- accées au boutons d"enregistrement de connéexion et de déconnexion peu importe le rôle de l'utilisateur authentifié --}}
                        
                         <a href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            {{ __('Déconnexion') }}
+                            @lang('general.deconnecxion')
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -226,8 +211,8 @@ footer {
                             </div>
             
                     @else
-                        <a class="nav-link" href="{{ route('login') }}">{{ __('Connexion') }}</a>
-                        <a class="nav-link" href="{{ route('register') }}">{{ __('Inscription') }}</a>
+                        <a class="nav-link" href="{{ route('login') }}">@lang('general.connexion')</a>
+                        <a class="nav-link" href="{{ route('register') }}">@lang('general.inscription')</a>
 
             @endif
 

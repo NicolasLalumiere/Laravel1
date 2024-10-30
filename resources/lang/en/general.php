@@ -20,4 +20,7 @@ return [
     'Ajout voyage' => 'Add a Destination!',
     'Ajout transport' => 'Add a transportation method!',
     'Modifier voyage' => 'Modify your trip!',
+    'connexion' => 'Login',
+    'deconnexion' => 'Logout',
+    'inscription' => 'Register',
 ];
