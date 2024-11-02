@@ -23,4 +23,7 @@ return [
     'connexion' => 'Conexión',
     'deconnexion' => 'Desconexión',
     'inscription' => 'Registro',
+    'Photo' => 'foto',
+    'Photo actuelle' => 'Foto actual',
+    'Nouvelle Photo' => 'Nueva foto (opcional)',
 ];

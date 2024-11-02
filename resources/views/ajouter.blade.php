@@ -71,7 +71,7 @@
 
 <div class="container">
     <h2>@lang('general.Ajout voyage')</h2>
-    <form action="{{ route('voyages.store') }}" method="post">
+    <form action="{{ route('voyages.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <p>
             <label for="pays">@lang('general.Pays')</label> :  
@@ -79,10 +79,14 @@
             
             <label for="jours">@lang('general.jours')</label> :  
             <input type="text" name="jours" id="jours" required /><br />
-
+            
+            <!-- Champ pour télécharger une image -->
+            <label for="photo">@lang('general.Photo')</label> :  
+            <input type="file" name="photo" id="photo" required /><br />
+            
             <input type="hidden" name="user_id" value="{{ $user->id }}" />  
             
-            <input type="submit" value=@lang('general.Ajouter') />
+            <input type="submit" value="@lang('general.Ajouter')" />
         </p>
     </form>
 </div>

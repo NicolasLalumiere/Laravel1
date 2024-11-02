@@ -23,4 +23,7 @@ return [
     'connexion' => 'Login',
     'deconnexion' => 'Logout',
     'inscription' => 'Register',
+    'Photo' => 'photo',
+    'Photo actuelle' => 'current photo',
+    'Nouvelle Photo' => 'New photo (optional)',
 ];

@@ -72,7 +72,7 @@
 <div class="container">
         
         <h2>@lang('general.Modifier voyage')</h2>
-        <form action="{{ route('voyages.update', $voyage->id) }}" method="post">
+        <form action="{{ route('voyages.update', $voyage->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <p>
@@ -81,6 +81,18 @@
 
             <label for="jours">@lang('general.jours')</label> :  
             <input type="text" name="jours" id="jours" value="{{ old('jours', $voyage->jours) }}" required /><br />
+
+             <!-- Aperçu de l'image actuelle -->
+             @if ($voyage->photo)
+                <label>@lang('general.Photo actuelle')</label>:
+                <div>
+                    <img src="{{ asset('storage/images/upload/' . $voyage->photo) }}" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Image de {{ $voyage->pays }}">
+                </div>
+            @endif
+
+            <!-- Champ de fichier pour une nouvelle image, rendu facultatif -->
+            <label for="photo">@lang('general.Nouvelle Photo'):</label>  
+            <input type="file" name="photo" id="photo" /><br />
 
             <input type="hidden" name="user_id" value="{{ $user->id }}" /> 
             <input type="hidden" name="id" value="{{ $voyage->id }}" /> 

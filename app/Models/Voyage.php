@@ -9,7 +9,7 @@ class Voyage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'pays','jours'];
+    protected $fillable = ['user_id', 'pays','jours', 'photo'];
 
     public function transports()
     {

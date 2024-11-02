@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Psy\Readline\Hoa\Console;
 
 class VoyageController extends Controller
 {
@@ -62,22 +64,27 @@ class VoyageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        {
-            // Valider les données
-            $validatedData = $request->validate([
-                'pays' => 'required|string|max:255',
-                'jours' => 'required|integer',
-                'user_id' => 'required|integer',
-            ]);
-    
-            // Créer un nouveau voyage
-            Voyage::create($validatedData);
-    
-            // Rediriger vers une page ou afficher un message de succès
-            return redirect('/')->with('success', 'Voyage ajouté avec succès!');
-        }
+{
+    $validatedData = $request->validate([
+        'pays' => 'required|string|max:255',
+        'jours' => 'required|integer',
+        'user_id' => 'required|integer',
+        'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+    ]);
+
+    // Enregistrer l'image et définir son chemin
+    if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+        $image = $request->file('photo');
+        $fileName = time() . '.' . $image->getClientOriginalExtension();
+        $path = $image->storeAs('images/upload', $fileName, 'public');
+        $validatedData['photo'] = $fileName; // Ajouter le nom du fichier dans les données validées
     }
+
+    // Créer le voyage
+    Voyage::create($validatedData);
+
+    return redirect('/')->with('success', 'Voyage ajouté avec succès!');
+}
 
     /**
      * Display the specified resource.
@@ -111,21 +118,37 @@ class VoyageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-         // Valider les données
-        $validatedData = $request->validate([
-            'pays' => 'required|string|max:255',
-            'jours' => 'required|integer',
-            'user_id' => 'required|integer',
-        ]);
+{
+    $voyage = Voyage::findOrFail($id);
 
-        // Trouver le voyage par ID et mettre à jour les données
-        $voyage = Voyage::findOrFail($id);
-        $voyage->update($validatedData);
+    // Validation
+    $request->validate([
+        'pays' => 'required|string',
+        'jours' => 'required|integer',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
 
-    // Rediriger vers une page ou afficher un message de succès
-    return redirect('/')->with('success', 'Voyage modifié avec succès!');
+    // Mise à jour des champs
+    $voyage->pays = $request->input('pays');
+    $voyage->jours = $request->input('jours');
+
+    // Mise à jour de l'image si une nouvelle est téléchargée
+    
+    if ($request->hasFile('photo')) {
+        // Supprime l'ancienne image si elle existe
+        if ($voyage->photo) {
+            Storage::delete('public/images/upload/' . $voyage->photo);
+        }
+
+        $newImageName = time() . '-' . $request->file('photo')->getClientOriginalName();
+        $path = $request->file('photo')->storeAs('images/upload', $newImageName, 'public');
+        $voyage->photo = $newImageName;
     }
+
+    $voyage->save();
+
+    return redirect()->route('voyages.index')->with('success', 'Voyage mis à jour avec succès.');
+}
 
     /**
      * Remove the specified resource from storage.
