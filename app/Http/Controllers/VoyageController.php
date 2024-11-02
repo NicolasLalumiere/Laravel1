@@ -167,4 +167,36 @@ class VoyageController extends Controller
     // Rediriger vers une page avec un message de succès
     return redirect()->route('voyages.index')->with('success', 'Voyage supprimé avec succès!');
     }
+
+    public function autocomplete(Request $request)
+    {
+        $search = $request->search;
+        $voyages = Voyage::orderby('pays','asc')
+                    ->select('id','pays')
+                    ->where('pays', 'LIKE', '%'.$search. '%')
+                    ->get();
+                    $response = array();
+                    foreach($voyages as $voyage){
+                        $response[] = array(
+                            'value' => $voyage->id,
+                            'label' => $voyage->pays
+                        );
+                          
+                    }
+                // dd($response); 
+                    /* $users = User::orderby('name','asc')
+                    ->select('id','name')
+                    ->where('name', 'LIKE', '%'.$search. '%')
+                    ->get();
+                    $response = array();
+                    foreach($users as $user){
+                        $response[] = array(
+                            'value' => $user->id,
+                            'label' => $user->name
+                        );
+                    }
+ */
+
+        return response()->json($response);
+    } 
 }
