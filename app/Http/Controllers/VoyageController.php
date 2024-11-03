@@ -94,7 +94,8 @@ class VoyageController extends Controller
      */
     public function show($id)
     {
-        //
+        $voyage = Voyage::with('transports')->findOrFail($id);
+        return view('voyages.show', compact('voyage'));
     }
 
     /**

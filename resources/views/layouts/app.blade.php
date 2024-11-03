@@ -215,8 +215,8 @@
                                     });
                                 },
                                 select: function(event, ui) {
-                                    $('#voyage_search').val(ui.item.label);
-
+                                    // Redirige vers une page de détails pour le voyage sélectionné
+                                    window.location.href = `/voyages/${ui.item.value}`;
                                     return false;
                                 }
                             });
