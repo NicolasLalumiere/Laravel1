@@ -188,11 +188,12 @@
 
 <nav>
     <div class="car-body">
+    @guest
                     <form>
                         @csrf
                         <div class="form-group">
                             <input type="text" class="typeahead form-control" id = "voyage_search"
-                                placeholder = "Rechercher...">
+                                placeholder = @lang('general.Recherche')>
                         </div>
                     </form>
                     <script type="text/javascript">
@@ -221,6 +222,7 @@
                             });
                         });
                     </script>
+                     @endguest
                 </div>
     <a href="{{ url('lang/fr') }}">Français</a>
     <a href="{{ url('lang/en') }}">English</a>
