@@ -37,8 +37,9 @@
         @lang('general.if_admin_logged_in') <strong>@lang('general.admin_space')</strong>
         @lang('general.admin_option_in_second_nav_bar').
         @lang('general.admin_can_see_all_trips_in_db_including_others').
-        @lang('general.admin_can_delete_any_trip').
     </p>
+
+    <p>ADMIN: nic@test.com / nic12345!</p>
 
     <h3>@lang('general.image_requirements')</h3>
     <p>
