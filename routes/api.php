@@ -22,8 +22,9 @@ use App\Models\Voyage;
 
 
 Route::post('register', [RegisterController::class, 'register']);
-
+Route::post('logout', [RegisterController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('login', [RegisterController::class, 'login']);
+
 Route::get('/voyages', [VoyageController::class, 'index']);
 Route::get('/voyages/{id}', [VoyageController::class, 'show']);
      
@@ -31,10 +32,10 @@ Route::get('/voyages/{id}', [VoyageController::class, 'show']);
 Route::middleware('auth:sanctum')->group( function () {
     //Route::resource('articles', ArticleController::class);
     // Route::get('articles', [ArticleController::class, 'index']);
-    Route::post('voyages/', [VoyageController::class, 'store']);
-    Route::get('voyages/edit/{id}', [VoyageController::class, 'edit']);
-    Route::put('voyages/update/{id}', [VoyageController::class, 'update']);
-    Route::delete('voyages/{id}', [VoyageController::class, 'destroy']); 
+    Route::post('store', [VoyageController::class, 'store']);
+    Route::get('edit/{id}', [VoyageController::class, 'edit']);
+    Route::put('update/{id}', [VoyageController::class, 'update']);
+    Route::delete('destroy/{id}', [VoyageController::class, 'destroy']); 
 
 });
 

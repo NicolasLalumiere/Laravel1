@@ -99,4 +99,23 @@ class RegisterController extends Controller
          } 
  
      }
+
+     public function logout()
+     {
+         try {
+             Session::flush();
+             $success = true;
+             $message = 'Successfully logged out';
+         } catch (\Illuminate\Database\QueryException $ex) {
+             $success = false;
+             $message = $ex->getMessage();
+         }
+ 
+         // response
+         $response = [
+             'success' => $success,
+             'message' => $message,
+         ];
+         return response()->json($response);
+     }
 }

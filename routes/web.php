@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+ 
+Route::get('{any}', function () {
+    return view('carnet');
+})->where('any', '.*'); 
+
 Route::resource('voyages', VoyageController::class);
 Route::get('/voyages/{id}', [VoyageController::class, 'show'])->name('voyages.show');
 Route::resource('transports', TransportController::class);
