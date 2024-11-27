@@ -19,44 +19,36 @@
                 style="background-color: #3485dc; color: #ffff"
             >
                 <!-- for logged-in user-->
-                <div
-                    class="navbar-nav"
-                    v-if="isLoggedIn"
-                    style="background-color: #3485dc; color: #ffff"
-                >
+                <div v-if="isLoggedIn" class="navbar-nav">
                     <router-link to="/dashboard" class="nav-item nav-link"
                         >Dashboard</router-link
                     >
                     <router-link to="/voyages" class="nav-item nav-link"
-                        >Articles</router-link
+                        >Voyages</router-link
                     >
                     <a
                         class="nav-item nav-link"
                         style="cursor: pointer"
                         @click="logout"
-                        >Logout</a
+                        >Deconnexion</a
                     >
                 </div>
                 <!-- for non-logged user-->
-                <div
-                    class="navbar-nav"
-                    v-else
-                    style="background-color: #3485dc; color: #ffff"
-                >
+                <div v-else class="navbar-nav">
                     <router-link to="/" class="nav-item nav-link"
-                        >Home</router-link
+                        >Accueil</router-link
                     >
-                    <router-link to="/articles" class="nav-item nav-link"
+                    <router-link to="/voyages" class="nav-item nav-link"
                         >Voyages</router-link
                     >
                     <router-link to="/login" class="nav-item nav-link"
-                        >login</router-link
+                        >Connexion</router-link
                     >
                     <router-link to="/register" class="nav-item nav-link"
-                        >Register
-                    </router-link>
+                        >Inscription</router-link
+                    >
                     <router-link to="/about" class="nav-item nav-link"
-                        >About</router-link
+                        >A propos</router-link
                     >
                 </div>
             </div>
@@ -75,25 +67,33 @@ export default {
         };
     },
     created() {
-        if (window.Laravel.isLoggedin) {
-            this.isLoggedIn = true;
-        }
+        // Vérifier l'état de la session lors de la création du composant
+        this.checkLoginStatus();
     },
     methods: {
+        // Méthode pour vérifier l'état de la session
+        checkLoginStatus() {
+            // Vérifie dans le localStorage si le token existe
+            if (localStorage.getItem("token")) {
+                this.isLoggedIn = true;
+            } else {
+                this.isLoggedIn = false;
+            }
+        },
+
         logout(e) {
-            console.log("ss");
             e.preventDefault();
-            this.$axios.get("/sanctum/csrf-cookie").then((response) => {
+            this.$axios.get("/sanctum/csrf-cookie").then(() => {
                 this.$axios
                     .post("/api/logout")
                     .then((response) => {
                         if (response.data.success) {
-                            window.location.href = "/";
-                        } else {
-                            console.log(response);
+                            localStorage.removeItem("token"); // Supprimer le token
+                            this.isLoggedIn = false; // Mettre à jour l'état
+                            this.$router.push("/"); // Rediriger vers la page d'accueil
                         }
                     })
-                    .catch(function (error) {
+                    .catch((error) => {
                         console.error(error);
                     });
             });

@@ -17,14 +17,10 @@ class VoyageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $voyages = Voyage::latest()->paginate(10);
-        return response()->json( 
-            
-             $voyages,200
-
-            );
-    }
+{
+    $voyages = Voyage::all(); // Si vous voulez récupérer tous les voyages sans pagination
+    return response()->json($voyages, 200);
+}
 
     /**
      * Store a newly created resource in storage.

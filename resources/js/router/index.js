@@ -1,35 +1,19 @@
-import { createWebHistory, createRouter } from "vue-router";
+import Vue from "vue";
+import Router from "vue-router";
 
-//import Home from "../pages/Home";
-//import About from "../pages/About";
-//import Register from "../pages/Register";
-//import Login from "../pages/Login";
-//import Dashboard from "../pages/Dashboard";
-
+import Home from "../pages/Home";
+import Dashboard from "../pages/Dashboard";
+import Login from "../pages/Login";
 import Voyages from "../components/Voyages";
-//import AddArticle from "../components/AddArticle";
-//import EditArticle from "../components/EditArticle";
+
+// Inscrire Vue Router
+Vue.use(Router);
 
 export const routes = [
     {
         name: "home",
         path: "/",
         component: Home,
-    },
-    {
-        name: "about",
-        path: "/about",
-        component: About,
-    },
-    {
-        name: "register",
-        path: "/register",
-        component: Register,
-    },
-    {
-        name: "login",
-        path: "/login",
-        component: Login,
     },
     {
         name: "dashboard",
@@ -42,20 +26,15 @@ export const routes = [
         component: Voyages,
     },
     {
-        name: "addvoyage",
-        path: "/voyages/add",
-        component: AddVoyage,
-    },
-    {
-        name: "editvoyage",
-        path: "/voyages/edit/:id",
-        component: EditVoyage,
+        name: "login",
+        path: "/login",
+        component: Login,
     },
 ];
 
-const router = createRouter({
-    history: createWebHistory(),
-    routes: routes,
+const router = new Router({
+    mode: "history", // Utilise le mode historique
+    routes,
 });
 
 export default router;

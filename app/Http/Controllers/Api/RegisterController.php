@@ -100,22 +100,13 @@ class RegisterController extends Controller
  
      }
 
-     public function logout()
-     {
-         try {
-             Session::flush();
-             $success = true;
-             $message = 'Successfully logged out';
-         } catch (\Illuminate\Database\QueryException $ex) {
-             $success = false;
-             $message = $ex->getMessage();
-         }
- 
-         // response
-         $response = [
-             'success' => $success,
-             'message' => $message,
-         ];
-         return response()->json($response);
-     }
+     public function logout(Request $request)
+    {
+        // Révoque tous les tokens associés à l'utilisateur
+        $request->user()->tokens->each(function ($token) {
+            $token->delete();
+        });
+
+        return response()->json(['success' => true]);
+    }
 }
