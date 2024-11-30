@@ -18,7 +18,7 @@
                 class="collapse navbar-collapse"
                 style="background-color: #3485dc; color: #ffff"
             >
-                <!-- for logged-in user-->
+                <!-- for logged-in user -->
                 <div v-if="isLoggedIn" class="navbar-nav">
                     <router-link to="/dashboard" class="nav-item nav-link"
                         >Dashboard</router-link
@@ -30,10 +30,10 @@
                         class="nav-item nav-link"
                         style="cursor: pointer"
                         @click="logout"
-                        >Deconnexion</a
+                        >Déconnexion</a
                     >
                 </div>
-                <!-- for non-logged user-->
+                <!-- for non-logged user -->
                 <div v-else class="navbar-nav">
                     <router-link to="/" class="nav-item nav-link"
                         >Accueil</router-link
@@ -61,26 +61,17 @@
 <script>
 export default {
     name: "App",
-    data() {
-        return {
-            isLoggedIn: false,
-        };
+    computed: {
+        // Accéder à l'état de la connexion depuis le store
+        isLoggedIn() {
+            return this.$store.state.isLoggedIn;
+        },
     },
     created() {
         // Vérifier l'état de la session lors de la création du composant
-        this.checkLoginStatus();
+        this.$store.dispatch("checkLoginStatus");
     },
     methods: {
-        // Méthode pour vérifier l'état de la session
-        checkLoginStatus() {
-            // Vérifie dans le localStorage si le token existe
-            if (localStorage.getItem("token")) {
-                this.isLoggedIn = true;
-            } else {
-                this.isLoggedIn = false;
-            }
-        },
-
         logout(e) {
             e.preventDefault();
             this.$axios.get("/sanctum/csrf-cookie").then(() => {
@@ -88,8 +79,7 @@ export default {
                     .post("/api/logout")
                     .then((response) => {
                         if (response.data.success) {
-                            localStorage.removeItem("token"); // Supprimer le token
-                            this.isLoggedIn = false; // Mettre à jour l'état
+                            this.$store.dispatch("logout"); // Appeler l'action de déconnexion
                             this.$router.push("/"); // Rediriger vers la page d'accueil
                         }
                     })

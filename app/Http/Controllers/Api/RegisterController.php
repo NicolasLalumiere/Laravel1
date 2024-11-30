@@ -21,48 +21,36 @@ class RegisterController extends Controller
      */
 
      public function register(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|confirmed',
+    ]);
 
-     {
- 
-         $validator = Validator::make($request->all(), [
- 
-             'name' => 'required',
- 
-             'email' => 'required|email',
- 
-             'password' => 'required',
- 
-             'c_password' => 'required|same:password',
- 
-         ]);
- 
-    
- 
-         if($validator->fails()){
- 
-             return $this->sendError('Validation Error.', $validator->errors());       
- 
-         }
- 
-    
- 
-         $input = $request->all();
- 
-         $input['password'] = bcrypt($input['password']);
- 
-         $user = User::create($input);
- 
-         $success['token'] =  $user->createToken('MyApp')->plainTextToken;
- 
-         $success['name'] =  $user->name;
-        // $success['id'] =  $user->id;  la réponse lors de l'enregistrement peut aussi être l'id et le token
- 
-    
- 
-         return response()->json([$success, "message"=> 'User register successfully.']);
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation Error.',
+            'errors' => $validator->errors(),
+        ], 422); // 422 : Erreur de validation
+    }
 
- 
-     }
+    $input = $request->all();
+    $input['password'] = bcrypt($input['password']);
+
+    $user = User::create($input);
+
+    $success['token'] = $user->createToken('MyApp')->plainTextToken;
+    $success['name'] = $user->name;
+
+    return response()->json([
+        'success' => true,
+        'message' => 'User registered successfully.',
+        'data' => $success,
+    ], 201); // 201 : Création réussie
+}
+
  
     
  

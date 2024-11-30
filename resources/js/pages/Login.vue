@@ -24,39 +24,37 @@
             </div>
             <button type="submit" class="btn btn-primary">Se connecter</button>
         </form>
-        <p v-if="error" class="error-message">{{ error }}</p>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
     data() {
         return {
             email: "",
             password: "",
-            error: "",
         };
+    },
+    computed: {
+        // Accéder au message d'erreur depuis le store
+        errorMessage() {
+            return this.$store.state.errorMessage;
+        },
     },
     methods: {
         async loginUser() {
-            this.error = ""; // Réinitialiser l'erreur à chaque tentative de connexion
-
             try {
-                const response = await axios.post("api/login", {
+                // Appeler l'action Vuex pour gérer la connexion
+                await this.$store.dispatch("loginUser", {
                     email: this.email,
                     password: this.password,
                 });
 
-                // Si la connexion est réussie
-                const token = response.data[0].token;
-                localStorage.setItem("token", token); // Stocker le token localement
-
-                // Rediriger vers la page des voyages
+                // Si la connexion réussit, rediriger vers la page des voyages
                 this.$router.push("/voyages");
             } catch (error) {
-                this.error = "Identifiants incorrects. Veuillez réessayer."; // Gérer l'erreur
+                console.error("Erreur lors de la connexion :", error);
             }
         },
     },

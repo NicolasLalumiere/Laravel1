@@ -36,8 +36,9 @@
                                     params: { id: voyage.id },
                                 }"
                                 class="btn btn-primary"
-                                >Modifier</router-link
                             >
+                                Modifier
+                            </router-link>
                             <button
                                 class="btn btn-danger"
                                 @click="deleteVoyage(voyage.id)"
@@ -63,16 +64,24 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
     data() {
         return {
             voyages: [], // Initialisation de la liste des voyages
-            isAuthenticated: false, // Initialisation de l'état d'authentification
         };
     },
+    computed: {
+        // Accéder à l'état d'authentification du store
+        ...mapState(["isLoggedIn"]),
+        isAuthenticated() {
+            return this.isLoggedIn; // Utiliser la valeur de isLoggedIn du store
+        },
+    },
     created() {
-        // Vérifier si l'utilisateur est authentifié
-        this.checkAuthentication();
+        // Vérifier l'état de connexion lors de la création du composant
+        this.$store.dispatch("checkLoginStatus");
 
         // Faire une requête pour récupérer tous les voyages (publique)
         this.$axios.get("/sanctum/csrf-cookie").then(() => {
@@ -90,19 +99,6 @@ export default {
         });
     },
     methods: {
-        // Vérifier si l'utilisateur est connecté
-        checkAuthentication() {
-            this.$axios
-                .get("/api/user")
-                .then((response) => {
-                    // Si l'utilisateur est connecté, on le considère authentifié
-                    this.isAuthenticated = true;
-                })
-                .catch(() => {
-                    // Si l'utilisateur n'est pas connecté, on le considère non authentifié
-                    this.isAuthenticated = false;
-                });
-        },
         // Méthode pour supprimer un voyage
         deleteVoyage(id) {
             this.$axios.get("/sanctum/csrf-cookie").then(() => {
