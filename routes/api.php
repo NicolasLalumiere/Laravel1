@@ -36,6 +36,9 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('edit/{id}', [VoyageController::class, 'edit']);
     Route::put('update/{id}', [VoyageController::class, 'update']);
     Route::delete('destroy/{id}', [VoyageController::class, 'destroy']); 
+   
+    Route::middleware('auth:api')->get('/api/voyages/user', [VoyageController::class, 'getMyPosts']);
+
 
 });
 

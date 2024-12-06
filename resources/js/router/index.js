@@ -6,6 +6,7 @@ import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Voyages from "../components/Voyages";
+import VoyagesConnecter from "../components/VoyagesConnecter.vue";
 
 // Inscrire Vue Router
 Vue.use(Router);

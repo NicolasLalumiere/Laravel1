@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class VoyageController extends Controller
 {
@@ -119,4 +120,20 @@ class VoyageController extends Controller
           $voyage->delete();
         return response()->json(null, 204);
     }
+
+    public function getUserVoyages()
+{
+    $userId = Auth::id();
+    if (!$userId) {
+        return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+    }
+    $voyages = Voyage::where('user_id', $userId)->get();
+    return response()->json($voyages);
+}
+
+public function getMyPosts(){    
+     $user = auth()->user();     $posts = $user->posts; // Récupère les posts de l'utilisateur connectéreturn response()->json($posts); 
+    }
+
+    
 }

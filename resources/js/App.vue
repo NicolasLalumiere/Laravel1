@@ -9,6 +9,10 @@
             "
         >
             <h2>Site monopage Laravel-Vue avec authentification</h2>
+            <!-- Afficher le message de bienvenue si l'utilisateur est connecté -->
+            <p v-if="isLoggedIn" style="font-size: 18px">
+                Bonjour : {{ userName }}
+            </p>
         </div>
         <nav
             class="navbar navbar-expand-lg navbar-light bg-light"
@@ -66,10 +70,18 @@ export default {
         isLoggedIn() {
             return this.$store.state.isLoggedIn;
         },
+        // Récupérer le nom de l'utilisateur connecté
+        userName() {
+            // Récupère le nom de l'utilisateur depuis le state
+            return this.$store.state.user ? this.$store.state.user.name : "";
+        },
     },
     created() {
         // Vérifier l'état de la session lors de la création du composant
         this.$store.dispatch("checkLoginStatus");
+        this.$axios.defaults.headers.common[
+            "Authorization"
+        ] = `Bearer ${localStorage.getItem("token")}`;
     },
     methods: {
         logout(e) {
