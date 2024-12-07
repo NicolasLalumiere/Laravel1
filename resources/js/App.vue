@@ -92,6 +92,7 @@ export default {
                     .then((response) => {
                         if (response.data.success) {
                             this.$store.dispatch("logout"); // Appeler l'action de déconnexion
+                            delete this.$axios.defaults.headers.common["Authorization"];
                             this.$router.push("/"); // Rediriger vers la page d'accueil
                         }
                     })

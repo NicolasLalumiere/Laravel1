@@ -18,10 +18,18 @@ class VoyageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-{
-    $voyages = Voyage::all(); // Si vous voulez récupérer tous les voyages sans pagination
-    return response()->json($voyages, 200);
-}
+    {
+        $user = auth()->user(); // Récupère l'utilisateur connecté
+    
+        if ($user !== null) { // Si un utilisateur est connecté
+            $voyages = Voyage::where('user_id', $user->id)->get();
+        } else { // Si aucun utilisateur n'est connecté
+            $voyages = Voyage::all();
+        }
+    
+        // Retourne toujours la réponse JSON
+        return response()->json($voyages, 200);
+    }
 
     /**
      * Store a newly created resource in storage.

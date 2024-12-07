@@ -36,7 +36,45 @@ export default new Vuex.Store({
         logout({ commit }) {
             commit("setLoggedIn", false);
             commit("setUserVoyages", []); // Réinitialiser les voyages lors de la déconnexion
+            commit("setUser", null);
             localStorage.removeItem("token"); // Supprimer le token
+        },
+        async registerUser({ commit }, formData) {
+            commit("setErrorMessage", ""); // Réinitialiser l'erreur
+            try {
+                const response = await axios.post("/api/register", formData);
+                alert("Inscription réussie ! Veuillez vous connecter.");
+                return response;
+            } catch (error) {
+                if (error.response) {
+                    if (error.response.data.errors) {
+                        const errors = error.response.data.errors;
+                        commit(
+                            "setErrorMessage",
+                            errors.name?.[0] ||
+                                errors.email?.[0] ||
+                                errors.password?.[0] ||
+                                "Une erreur s'est produite. Veuillez réessayer."
+                        );
+                    } else {
+                        commit(
+                            "setErrorMessage",
+                            error.response.data.message || "Erreur inconnue."
+                        );
+                    }
+                } else if (error.request) {
+                    commit(
+                        "setErrorMessage",
+                        "Impossible de se connecter au serveur."
+                    );
+                } else {
+                    commit(
+                        "setErrorMessage",
+                        "Une erreur interne s'est produite."
+                    );
+                }
+                throw error; // Rejeter l'erreur pour la gérer dans le composant
+            }
         },
         async loginUser({ commit }, credentials) {
             commit("setErrorMessage", ""); // Réinitialiser l'erreur
@@ -74,17 +112,12 @@ export default new Vuex.Store({
             }
         },
 
-        async fetchUserVoyages({ commit, state }) {
-            if (state.isLoggedIn && state.user) {
-                try {
-                    const response = await axios.get("/api/voyages/user");
-                    commit("setUserVoyages", response.data);
-                } catch (error) {
-                    console.error(
-                        "Erreur lors de la récupération des voyages :",
-                        error
-                    );
-                }
+        async fetchAllVoyages({ commit }) {
+            try {
+                const response = await axios.get("/api/voyages");
+                commit("setUserVoyages", response.data); // Réutilisez `setUserVoyages` pour stocker les voyages
+            } catch (error) {
+                console.error("Erreur lors de la récupération de tous les voyages :", error);
             }
         },
     },

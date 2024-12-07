@@ -86,7 +86,8 @@ export default {
         try {
             if (this.isAuthenticated) {
                 console.log("Appel API pour les voyages de l'utilisateur");
-                const response = await this.$axios.get("/api/voyages/user");
+                console.log(this.$store.state.user);
+                const response = await this.$axios.get("/api/voyages");
                 console.log(
                     "Réponse de l'API pour l'utilisateur connecté:",
                     response.data

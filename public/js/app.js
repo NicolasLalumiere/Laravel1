@@ -2091,6 +2091,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.$axios.post("/api/logout").then(function (response) {
           if (response.data.success) {
             _this.$store.dispatch("logout"); // Appeler l'action de déconnexion
+            delete _this.$axios.defaults.headers.common["Authorization"];
             _this.$router.push("/"); // Rediriger vers la page d'accueil
           }
         })["catch"](function (error) {
@@ -2147,38 +2148,39 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             console.log("Vérification de l'authentification:", _this.isAuthenticated);
             _context.prev = 1;
             if (!_this.isAuthenticated) {
-              _context.next = 11;
+              _context.next = 12;
               break;
             }
             console.log("Appel API pour les voyages de l'utilisateur");
-            _context.next = 6;
-            return _this.$axios.get("/api/voyages/user");
-          case 6:
+            console.log(_this.$store.state.user);
+            _context.next = 7;
+            return _this.$axios.get("/api/voyages");
+          case 7:
             response = _context.sent;
             console.log("Réponse de l'API pour l'utilisateur connecté:", response.data);
             _this.voyages = response.data;
-            _context.next = 17;
+            _context.next = 18;
             break;
-          case 11:
+          case 12:
             console.log("Appel API pour tous les voyages");
-            _context.next = 14;
+            _context.next = 15;
             return _this.$axios.get("/api/voyages");
-          case 14:
+          case 15:
             _response = _context.sent;
             console.log("Réponse de l'API pour tous les voyages:", _response.data);
             _this.voyages = _response.data;
-          case 17:
-            _context.next = 22;
+          case 18:
+            _context.next = 23;
             break;
-          case 19:
-            _context.prev = 19;
+          case 20:
+            _context.prev = 20;
             _context.t0 = _context["catch"](1);
             console.error("Erreur lors de la récupération des voyages:", _context.t0);
-          case 22:
+          case 23:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[1, 19]]);
+      }, _callee, null, [[1, 20]]);
     }))();
   },
   methods: {
@@ -3217,11 +3219,12 @@ vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2_
       var commit = _ref2.commit;
       commit("setLoggedIn", false);
       commit("setUserVoyages", []); // Réinitialiser les voyages lors de la déconnexion
+      commit("setUser", null);
       localStorage.removeItem("token"); // Supprimer le token
     },
-    loginUser: function loginUser(_ref3, credentials) {
+    registerUser: function registerUser(_ref3, formData) {
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var commit, response, token, userResponse;
+        var commit, response, _errors$name, _errors$email, _errors$password, errors;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -3229,71 +3232,105 @@ vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2_
               commit("setErrorMessage", ""); // Réinitialiser l'erreur
               _context.prev = 2;
               _context.next = 5;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/login", credentials);
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/register", formData);
             case 5:
               response = _context.sent;
-              // Stocker le token dans le localStorage
-              token = response.data[0].token;
-              localStorage.setItem("token", token);
-
-              // Récupérer les détails de l'utilisateur
-              _context.next = 10;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/user");
+              alert("Inscription réussie ! Veuillez vous connecter.");
+              return _context.abrupt("return", response);
             case 10:
-              userResponse = _context.sent;
-              // Assurez-vous que cette route renvoie les détails de l'utilisateur connecté
-              commit("setUser", userResponse.data);
-
-              // Modifier l'état de connexion
-              commit("setLoggedIn", true);
-              _context.next = 19;
-              break;
-            case 15:
-              _context.prev = 15;
+              _context.prev = 10;
               _context.t0 = _context["catch"](2);
               if (_context.t0.response) {
-                commit("setErrorMessage", "Identifiants incorrects. Veuillez réessayer.");
+                if (_context.t0.response.data.errors) {
+                  errors = _context.t0.response.data.errors;
+                  commit("setErrorMessage", ((_errors$name = errors.name) === null || _errors$name === void 0 ? void 0 : _errors$name[0]) || ((_errors$email = errors.email) === null || _errors$email === void 0 ? void 0 : _errors$email[0]) || ((_errors$password = errors.password) === null || _errors$password === void 0 ? void 0 : _errors$password[0]) || "Une erreur s'est produite. Veuillez réessayer.");
+                } else {
+                  commit("setErrorMessage", _context.t0.response.data.message || "Erreur inconnue.");
+                }
               } else if (_context.t0.request) {
                 commit("setErrorMessage", "Impossible de se connecter au serveur.");
               } else {
                 commit("setErrorMessage", "Une erreur interne s'est produite.");
               }
               throw _context.t0;
-            case 19:
+            case 14:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[2, 15]]);
+        }, _callee, null, [[2, 10]]);
       }))();
     },
-    fetchUserVoyages: function fetchUserVoyages(_ref4) {
+    loginUser: function loginUser(_ref4, credentials) {
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var commit, state, response;
+        var commit, response, token, userResponse;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              commit = _ref4.commit, state = _ref4.state;
-              if (!(state.isLoggedIn && state.user)) {
-                _context2.next = 12;
-                break;
-              }
+              commit = _ref4.commit;
+              commit("setErrorMessage", ""); // Réinitialiser l'erreur
               _context2.prev = 2;
               _context2.next = 5;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/voyages/user");
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/login", credentials);
             case 5:
               response = _context2.sent;
-              commit("setUserVoyages", response.data);
-              _context2.next = 12;
+              // Stocker le token dans le localStorage
+              token = response.data[0].token;
+              localStorage.setItem("token", token);
+
+              // Récupérer les détails de l'utilisateur
+              _context2.next = 10;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/user");
+            case 10:
+              userResponse = _context2.sent;
+              // Assurez-vous que cette route renvoie les détails de l'utilisateur connecté
+              commit("setUser", userResponse.data);
+
+              // Modifier l'état de connexion
+              commit("setLoggedIn", true);
+              _context2.next = 19;
               break;
-            case 9:
-              _context2.prev = 9;
+            case 15:
+              _context2.prev = 15;
               _context2.t0 = _context2["catch"](2);
-              console.error("Erreur lors de la récupération des voyages :", _context2.t0);
-            case 12:
+              if (_context2.t0.response) {
+                commit("setErrorMessage", "Identifiants incorrects. Veuillez réessayer.");
+              } else if (_context2.t0.request) {
+                commit("setErrorMessage", "Impossible de se connecter au serveur.");
+              } else {
+                commit("setErrorMessage", "Une erreur interne s'est produite.");
+              }
+              throw _context2.t0;
+            case 19:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[2, 9]]);
+        }, _callee2, null, [[2, 15]]);
+      }))();
+    },
+    fetchAllVoyages: function fetchAllVoyages(_ref5) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var commit, response;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              commit = _ref5.commit;
+              _context3.prev = 1;
+              _context3.next = 4;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/voyages");
+            case 4:
+              response = _context3.sent;
+              commit("setUserVoyages", response.data); // Réutilisez `setUserVoyages` pour stocker les voyages
+              _context3.next = 11;
+              break;
+            case 8:
+              _context3.prev = 8;
+              _context3.t0 = _context3["catch"](1);
+              console.error("Erreur lors de la récupération de tous les voyages :", _context3.t0);
+            case 11:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3, null, [[1, 8]]);
       }))();
     }
   }

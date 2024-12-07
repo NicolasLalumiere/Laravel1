@@ -94,6 +94,8 @@ class RegisterController extends Controller
         $request->user()->tokens->each(function ($token) {
             $token->delete();
         });
+        $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
         return response()->json(['success' => true]);
     }
