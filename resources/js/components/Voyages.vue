@@ -56,7 +56,7 @@
             v-if="isAuthenticated"
             type="button"
             class="btn btn-info"
-            @click="this.$router.push('/store')"
+            @click="$router.push('/voyages/ajout')"
         >
             Ajouter Voyage
         </button>

@@ -6,7 +6,7 @@ import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Voyages from "../components/Voyages";
-import VoyagesConnecter from "../components/VoyagesConnecter.vue";
+import AjoutVoyage from "../components/AjoutVoyage.vue";
 
 // Inscrire Vue Router
 Vue.use(Router);
@@ -26,6 +26,11 @@ export const routes = [
         name: "voyages",
         path: "/voyages",
         component: Voyages,
+    },
+    {
+        name: "ajoutVoyages",
+        path: "/voyages/ajout",
+        component: AjoutVoyage,
     },
     {
         name: "login",
