@@ -2275,7 +2275,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
               return _this2.$axios.get("/sanctum/csrf-cookie");
             case 3:
               _context2.next = 5;
-              return _this2.$axios["delete"]("/api/voyages/destroy/".concat(id));
+              return _this2.$axios["delete"]("/api/destroy/".concat(id));
             case 5:
               // Enlever le voyage supprimé de la liste
               _this2.voyages = _this2.voyages.filter(function (voyage) {

@@ -110,7 +110,7 @@ export default {
         async deleteVoyage(id) {
             try {
                 await this.$axios.get("/sanctum/csrf-cookie");
-                await this.$axios.delete(`/api/voyages/destroy/${id}`);
+                await this.$axios.delete(`/api/destroy/${id}`);
                 // Enlever le voyage supprimé de la liste
                 this.voyages = this.voyages.filter(
                     (voyage) => voyage.id !== id
