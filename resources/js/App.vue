@@ -51,9 +51,7 @@
                     <router-link to="/register" class="nav-item nav-link"
                         >Inscription</router-link
                     >
-                    <router-link to="/recherche" class="nav-item nav-link"
-                        >recherche</router-link
-                    >
+
                     <router-link to="/about" class="nav-item nav-link"
                         >A propos</router-link
                     >

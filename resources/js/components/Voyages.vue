@@ -13,7 +13,11 @@
                 @input="updateSuggestions"
             />
             <ul v-if="suggestions.length > 0" class="dropdown-menu show">
-                <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
+                <li
+                    v-for="(suggestion, index) in suggestions"
+                    :key="index"
+                    @click="selectSuggestion(suggestion)"
+                >
                     {{ suggestion }}
                 </li>
             </ul>
@@ -25,7 +29,7 @@
                     <th>Image</th>
                     <th>Pays</th>
                     <th>Jours</th>
-                    <th v-if="isAuthenticated">Actions</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,9 +46,15 @@
                             width="100"
                         />
                     </td>
-                    <td>{{ voyage.pays }}</td>
-                    <td>{{ voyage.jours }}</td>
-                    <td v-if="isAuthenticated">
+                    <!-- Les champs Pays et Jours, avec gestion de la visibilité -->
+                    <td v-if="visibleVoyages.includes(voyage.id)">{{ voyage.pays }}</td>
+                    <td v-else></td>
+
+                    <td v-if="visibleVoyages.includes(voyage.id)">{{ voyage.jours }}</td>
+                    <td v-else></td>
+
+                    <!-- Boutons d'actions -->
+                    <td>
                         <div class="btn-group" role="group">
                             <router-link
                                 :to="{
@@ -60,6 +70,12 @@
                                 @click="deleteVoyage(voyage.id)"
                             >
                                 Supprimer
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                @click="toggleVisibility(voyage.id)"
+                            >
+                                Afficher
                             </button>
                         </div>
                     </td>
@@ -86,7 +102,8 @@ export default {
         return {
             voyages: [],
             searchQuery: '',
-            suggestions: [], // Liste des suggestions pour l'autocomplétion
+            suggestions: [],
+            visibleVoyages: [], // Liste des IDs des voyages avec champs visibles
         };
     },
     computed: {
@@ -105,13 +122,8 @@ export default {
     },
     async created() {
         try {
-            if (this.isAuthenticated) {
-                const response = await this.$axios.get("/api/voyages");
-                this.voyages = response.data;
-            } else {
-                const response = await this.$axios.get("/api/voyages");
-                this.voyages = response.data;
-            }
+            const response = await this.$axios.get("/api/voyages");
+            this.voyages = response.data;
         } catch (error) {
             console.error("Erreur lors de la récupération des voyages:", error);
         }
@@ -122,6 +134,7 @@ export default {
                 await this.$axios.get("/sanctum/csrf-cookie");
                 await this.$axios.delete(`/api/destroy/${id}`);
                 this.voyages = this.voyages.filter((voyage) => voyage.id !== id);
+                this.visibleVoyages = this.visibleVoyages.filter((vid) => vid !== id);
             } catch (error) {
                 console.error("Erreur lors de la suppression du voyage:", error);
             }
@@ -132,35 +145,25 @@ export default {
                 return;
             }
             this.suggestions = this.voyages
-                .map(voyage => voyage.pays)
-                .filter((pays, index, self) =>
-                    self.indexOf(pays) === index && pays.toLowerCase().includes(this.searchQuery.toLowerCase())
+                .map((voyage) => voyage.pays)
+                .filter(
+                    (pays, index, self) =>
+                        self.indexOf(pays) === index &&
+                        pays.toLowerCase().includes(this.searchQuery.toLowerCase())
                 )
-                .slice(0, 5); // Limiter à 5 suggestions
+                .slice(0, 5);
         },
         selectSuggestion(suggestion) {
             this.searchQuery = suggestion;
-            this.suggestions = []; // Cacher la liste après la sélection
-        }
+            this.suggestions = [];
+        },
+        toggleVisibility(id) {
+            if (this.visibleVoyages.includes(id)) {
+                this.visibleVoyages = this.visibleVoyages.filter((vid) => vid !== id);
+            } else {
+                this.visibleVoyages.push(id);
+            }
+        },
     },
 };
 </script>
-
-<style scoped>
-.dropdown-menu {
-    position: absolute;
-    width: 100%;
-    background-color: white;
-    border: 1px solid #ccc;
-    max-height: 150px;
-    overflow-y: auto;
-    z-index: 1000;
-}
-.dropdown-menu li {
-    padding: 8px;
-    cursor: pointer;
-}
-.dropdown-menu li:hover {
-    background-color: #f1f1f1;
-}
-</style>

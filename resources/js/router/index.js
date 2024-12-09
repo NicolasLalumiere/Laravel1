@@ -8,7 +8,6 @@ import Register from "../pages/Register";
 import Voyages from "../components/Voyages";
 import AjoutVoyage from "../components/AjoutVoyage.vue";
 import ModifierVoyage from "../components/ModifierVoyage.vue";
-import Recherche from "../pages/Recherche.vue";
 
 // Inscrire Vue Router
 Vue.use(Router);
@@ -38,11 +37,6 @@ export const routes = [
         name: "modifierVoyage",
         path: "/voyages/modifier",
         component: ModifierVoyage,
-    },
-    {
-        name: "recherche",
-        path: "/recherche",
-        component: Recherche,
     },
     {
         name: "login",
