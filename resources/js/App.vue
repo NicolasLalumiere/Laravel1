@@ -52,7 +52,7 @@
                         >Inscription</router-link
                     >
 
-                    <router-link to="/about" class="nav-item nav-link"
+                    <router-link to="/apropos" class="nav-item nav-link"
                         >A propos</router-link
                     >
                 </div>

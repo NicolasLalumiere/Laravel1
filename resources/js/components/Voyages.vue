@@ -56,16 +56,19 @@
                     <!-- Boutons d'actions -->
                     <td>
                         <div class="btn-group" role="group">
+                            
                             <router-link
                                 :to="{
                                     name: 'modifierVoyage',
                                     params: { id: voyage.id },
                                 }"
                                 class="btn btn-primary"
+                                v-if="isAuthenticated"
                             >
                                 Modifier
                             </router-link>
                             <button
+                                v-if="isAuthenticated"
                                 class="btn btn-danger"
                                 @click="deleteVoyage(voyage.id)"
                             >
