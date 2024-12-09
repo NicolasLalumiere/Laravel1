@@ -95,7 +95,7 @@ class VoyageController extends Controller
             'user_id' => 'required',
             'pays'=> 'required',
             'jours'=> 'required',
-            'photo'=> '|image|mimes:jpg,png,jpeg,gif,svg',
+            'photo'=> 'nullable|image|mimes:jpg,png,jpeg,gif,svg',
         ]);
         if ($validator->fails()) {
             return response() ->json(['success' => false, 'message' => $validator->errors()], 400);
@@ -103,8 +103,7 @@ class VoyageController extends Controller
  
         if ($request->hasfile('photo')) {
             $image = $request->photo;
-            $fileName = time() . '.' . $image->getClientOriginalName();
-            $path = $request->photo->storeAs('images/upload', $fileName, 'public');
+            $path = $request->photo->storeAs('images/upload', 'public');
             $article['photo'] = $path;
     
         }
@@ -142,6 +141,15 @@ class VoyageController extends Controller
 public function getMyPosts(){    
      $user = auth()->user();     $posts = $user->posts; // Récupère les posts de l'utilisateur connectéreturn response()->json($posts); 
     }
+
+
+    public function autocomplete(Request $request)
+{
+    $query = $request->input('query');
+    $voyages = Voyage::where('pays', 'like', '%' . $query . '%')->get();
+    
+    return response()->json($voyages);
+}
 
     
 }

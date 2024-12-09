@@ -25,6 +25,7 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::post('logout', [RegisterController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('login', [RegisterController::class, 'login']);
 
+Route::get('/api/autocomplete', [VoyageController::class, 'autocomplete']);
 Route::get('/voyages', [VoyageController::class, 'index']);
 Route::get('/voyages/{id}', [VoyageController::class, 'show']);
      
@@ -34,7 +35,7 @@ Route::middleware('auth:sanctum')->group( function () {
     // Route::get('articles', [ArticleController::class, 'index']);
     Route::post('/store', [VoyageController::class, 'store']);
     Route::get('edit/{id}', [VoyageController::class, 'edit']);
-    Route::put('update/{id}', [VoyageController::class, 'update']);
+    Route::put('/update/{id}', [VoyageController::class, 'update']);
     Route::delete('destroy/{id}', [VoyageController::class, 'destroy']); 
    
     Route::middleware('auth:api')->get('/api/voyages/user', [VoyageController::class, 'getMyPosts']);
