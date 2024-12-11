@@ -14,8 +14,19 @@
         </div>
   
         <div class="form-group">
-          <label for="photo">Photo :</label>
-          <input type="file" id="photo" @change="handleFileUpload" />
+          <label>Photo :</label>
+          <div 
+            class="drag-drop-zone" 
+            @dragover.prevent="handleDragOver" 
+            @dragleave="handleDragLeave" 
+            @drop.prevent="handleDrop"
+            :class="{ 'drag-over': isDragging }"
+          >
+            <p v-if="!voyage.photo">Déposez votre image ici ou cliquez pour sélectionner</p>
+            <p v-else>{{ voyage.photo.name }}</p>
+            <input type="file" id="photo" @change="handleFileUpload" hidden ref="fileInput" />
+          </div>
+          <button type="button" @click="triggerFileInput">Sélectionner une image</button>
         </div>
   
         <button type="submit">Ajouter le Voyage</button>
@@ -27,6 +38,7 @@
   export default {
     data() {
       return {
+        isDragging: false,
         voyage: {
           pays: "",
           jours: 1,
@@ -35,13 +47,27 @@
       };
     },
     methods: {
+      triggerFileInput() {
+        this.$refs.fileInput.click();
+      },
       handleFileUpload(event) {
         const file = event.target.files[0];
         this.voyage.photo = file;
       },
+      handleDragOver() {
+        this.isDragging = true;
+      },
+      handleDragLeave() {
+        this.isDragging = false;
+      },
+      handleDrop(event) {
+        const file = event.dataTransfer.files[0];
+        this.voyage.photo = file;
+        this.isDragging = false;
+      },
       async ajouterVoyage() {
         const formData = new FormData();
-        const userId = this.$store.state.user.id; // Exemple pour stocker l'ID utilisateur localement
+        const userId = this.$store.state.user.id;
         formData.append("user_id", userId);
         formData.append("pays", this.voyage.pays);
         formData.append("jours", this.voyage.jours);
@@ -50,22 +76,21 @@
         }
   
         try {
-        const response = await this.$axios.post("/api/store", formData, {
+          const response = await this.$axios.post("/api/store", formData, {
             headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-        });
-
-        if (response.status === 201) {
+          });
+  
+          if (response.status === 201) {
             alert("Voyage ajouté avec succès !");
             this.$router.push({ name: "voyages" });
-        } else {
+          } else {
             alert("Erreur : " + response.data.message);
-        }
+          }
         } catch (error) {
-        alert("Une erreur s'est produite : " + (error.response?.data.message || error.message));
+          alert("Une erreur s'est produite : " + (error.response?.data.message || error.message));
         }
-
       },
     },
   };
@@ -104,6 +129,22 @@
     border-radius: 4px;
   }
   
+  .drag-drop-zone {
+    width: 100%;
+    padding: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+  }
+  
+  .drag-drop-zone.drag-over {
+    background-color: #e0f7fa;
+    border-color: #00796b;
+  }
+  
   button {
     display: block;
     width: 100%;
@@ -119,4 +160,3 @@
     background-color: #218838;
   }
   </style>
-  

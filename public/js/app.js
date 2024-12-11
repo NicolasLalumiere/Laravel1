@@ -2122,6 +2122,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      isDragging: false,
       voyage: {
         pays: "",
         jours: 1,
@@ -2130,9 +2131,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     };
   },
   methods: {
+    triggerFileInput: function triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
     handleFileUpload: function handleFileUpload(event) {
       var file = event.target.files[0];
       this.voyage.photo = file;
+    },
+    handleDragOver: function handleDragOver() {
+      this.isDragging = true;
+    },
+    handleDragLeave: function handleDragLeave() {
+      this.isDragging = false;
+    },
+    handleDrop: function handleDrop(event) {
+      var file = event.dataTransfer.files[0];
+      this.voyage.photo = file;
+      this.isDragging = false;
     },
     ajouterVoyage: function ajouterVoyage() {
       var _this = this;
@@ -2142,7 +2157,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           while (1) switch (_context.prev = _context.next) {
             case 0:
               formData = new FormData();
-              userId = _this.$store.state.user.id; // Exemple pour stocker l'ID utilisateur localement
+              userId = _this.$store.state.user.id;
               formData.append("user_id", userId);
               formData.append("pays", _this.voyage.pays);
               formData.append("jours", _this.voyage.jours);
@@ -2197,18 +2212,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      isDragging: false,
       voyage: {
         pays: "",
         jours: 1,
@@ -2217,17 +2226,28 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     };
   },
   methods: {
+    triggerFileInput: function triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
     handleFileUpload: function handleFileUpload(event) {
       var file = event.target.files[0];
-      if (file) {
-        console.log("Fichier sélectionné :", file.name);
-        this.voyage.photo = file;
-      }
+      this.voyage.photo = file;
+    },
+    handleDragOver: function handleDragOver() {
+      this.isDragging = true;
+    },
+    handleDragLeave: function handleDragLeave() {
+      this.isDragging = false;
+    },
+    handleDrop: function handleDrop(event) {
+      var file = event.dataTransfer.files[0];
+      this.voyage.photo = file;
+      this.isDragging = false;
     },
     modifierVoyage: function modifierVoyage() {
       var _this = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var userId, formData, _iterator, _step, _step$value, key, value, voyageId, response;
+        var userId, formData, voyageId, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -2237,50 +2257,37 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 3:
               userId = _this.$store.state.user.id;
               formData = new FormData();
-              formData.append("_method", "PUT"); // Indiquez à Laravel que cette requête est une mise à jour
+              formData.append("_method", "PUT");
               formData.append("user_id", userId);
               formData.append("pays", _this.voyage.pays);
               formData.append("jours", String(_this.voyage.jours));
               if (_this.voyage.photo) {
                 formData.append("photo", _this.voyage.photo);
               }
-
-              // Afficher les données de FormData dans la console pour déboguer
-              _iterator = _createForOfIteratorHelper(formData.entries());
-              try {
-                for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                  _step$value = _slicedToArray(_step.value, 2), key = _step$value[0], value = _step$value[1];
-                  console.log("".concat(key, ": ").concat(value));
-                }
-              } catch (err) {
-                _iterator.e(err);
-              } finally {
-                _iterator.f();
-              }
               voyageId = _this.$route.params.id;
-              _context.next = 15;
+              _context.next = 13;
               return _this.$axios.put("/api/update/".concat(voyageId), formData, {
                 headers: {
                   Authorization: "Bearer ".concat(localStorage.getItem("token")),
-                  'Content-Type': 'multipart/form-data',
-                  Accept: 'application/json'
+                  "Content-Type": "multipart/form-data",
+                  Accept: "application/json"
                 }
               });
-            case 15:
+            case 13:
               response = _context.sent;
               console.log("Voyage mis à jour :", response.data);
               _this.$router.push("/voyages");
-              _context.next = 23;
+              _context.next = 21;
               break;
-            case 20:
-              _context.prev = 20;
+            case 18:
+              _context.prev = 18;
               _context.t0 = _context["catch"](0);
               console.error("Erreur lors de la modification du voyage :", _context.t0);
-            case 23:
+            case 21:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 20]]);
+        }, _callee, null, [[0, 18]]);
       }))();
     }
   },
@@ -2291,7 +2298,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            // Vous devez charger les détails du voyage existant pour l'afficher dans le formulaire
             voyageId = _this2.$route.params.id;
             _context2.prev = 1;
             _context2.next = 4;
@@ -2825,19 +2831,40 @@ var render = function render() {
     }
   })]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "photo"
+  }, [_c("label", [_vm._v("Photo :")]), _vm._v(" "), _c("div", {
+    staticClass: "drag-drop-zone",
+    "class": {
+      "drag-over": _vm.isDragging
+    },
+    on: {
+      dragover: function dragover($event) {
+        $event.preventDefault();
+        return _vm.handleDragOver.apply(null, arguments);
+      },
+      dragleave: _vm.handleDragLeave,
+      drop: function drop($event) {
+        $event.preventDefault();
+        return _vm.handleDrop.apply(null, arguments);
+      }
     }
-  }, [_vm._v("Photo :")]), _vm._v(" "), _c("input", {
+  }, [!_vm.voyage.photo ? _c("p", [_vm._v("Déposez votre image ici ou cliquez pour sélectionner")]) : _c("p", [_vm._v(_vm._s(_vm.voyage.photo.name))]), _vm._v(" "), _c("input", {
+    ref: "fileInput",
     attrs: {
       type: "file",
-      id: "photo"
+      id: "photo",
+      hidden: ""
     },
     on: {
       change: _vm.handleFileUpload
     }
   })]), _vm._v(" "), _c("button", {
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: _vm.triggerFileInput
+    }
+  }, [_vm._v("Sélectionner une image")])]), _vm._v(" "), _c("button", {
     attrs: {
       type: "submit"
     }
@@ -2930,19 +2957,40 @@ var render = function render() {
     }
   })]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "photo"
+  }, [_c("label", [_vm._v("Photo :")]), _vm._v(" "), _c("div", {
+    staticClass: "drag-drop-zone",
+    "class": {
+      "drag-over": _vm.isDragging
+    },
+    on: {
+      dragover: function dragover($event) {
+        $event.preventDefault();
+        return _vm.handleDragOver.apply(null, arguments);
+      },
+      dragleave: _vm.handleDragLeave,
+      drop: function drop($event) {
+        $event.preventDefault();
+        return _vm.handleDrop.apply(null, arguments);
+      }
     }
-  }, [_vm._v("Photo :")]), _vm._v(" "), _c("input", {
+  }, [!_vm.voyage.photo ? _c("p", [_vm._v("Déposez votre image ici ou cliquez pour sélectionner")]) : _c("p", [_vm._v(_vm._s(_vm.voyage.photo.name))]), _vm._v(" "), _c("input", {
+    ref: "fileInput",
     attrs: {
       type: "file",
-      id: "photo"
+      id: "photo",
+      hidden: ""
     },
     on: {
       change: _vm.handleFileUpload
     }
   })]), _vm._v(" "), _c("button", {
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: _vm.triggerFileInput
+    }
+  }, [_vm._v("Sélectionner une image")])]), _vm._v(" "), _c("button", {
     attrs: {
       type: "submit"
     }
@@ -3708,7 +3756,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.ajout-voyage[data-v-17b257e9] {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n  border: 1px solid #ccc;\n  border-radius: 5px;\n  background-color: #f9f9f9;\n}\nh1[data-v-17b257e9] {\n  text-align: center;\n  margin-bottom: 20px;\n}\n.form-group[data-v-17b257e9] {\n  margin-bottom: 15px;\n}\nlabel[data-v-17b257e9] {\n  display: block;\n  font-weight: bold;\n  margin-bottom: 5px;\n}\ninput[data-v-17b257e9],\ntextarea[data-v-17b257e9] {\n  width: 100%;\n  padding: 8px;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\nbutton[data-v-17b257e9] {\n  display: block;\n  width: 100%;\n  padding: 10px;\n  background-color: #28a745;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\nbutton[data-v-17b257e9]:hover {\n  background-color: #218838;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.ajout-voyage[data-v-17b257e9] {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n  border: 1px solid #ccc;\n  border-radius: 5px;\n  background-color: #f9f9f9;\n}\nh1[data-v-17b257e9] {\n  text-align: center;\n  margin-bottom: 20px;\n}\n.form-group[data-v-17b257e9] {\n  margin-bottom: 15px;\n}\nlabel[data-v-17b257e9] {\n  display: block;\n  font-weight: bold;\n  margin-bottom: 5px;\n}\ninput[data-v-17b257e9],\ntextarea[data-v-17b257e9] {\n  width: 100%;\n  padding: 8px;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n.drag-drop-zone[data-v-17b257e9] {\n  width: 100%;\n  padding: 20px;\n  border: 2px dashed #ccc;\n  border-radius: 5px;\n  text-align: center;\n  margin-bottom: 10px;\n  background-color: #f9f9f9;\n  cursor: pointer;\n}\n.drag-drop-zone.drag-over[data-v-17b257e9] {\n  background-color: #e0f7fa;\n  border-color: #00796b;\n}\nbutton[data-v-17b257e9] {\n  display: block;\n  width: 100%;\n  padding: 10px;\n  background-color: #28a745;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\nbutton[data-v-17b257e9]:hover {\n  background-color: #218838;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3732,7 +3780,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.modifier-voyage[data-v-27e54601] {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n  border: 1px solid #ccc;\n  border-radius: 5px;\n  background-color: #f9f9f9;\n}\nh1[data-v-27e54601] {\n  text-align: center;\n  margin-bottom: 20px;\n}\n.form-group[data-v-27e54601] {\n  margin-bottom: 15px;\n}\nlabel[data-v-27e54601] {\n  display: block;\n  font-weight: bold;\n  margin-bottom: 5px;\n}\ninput[data-v-27e54601],\ntextarea[data-v-27e54601] {\n  width: 100%;\n  padding: 8px;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\nbutton[data-v-27e54601] {\n  display: block;\n  width: 100%;\n  padding: 10px;\n  background-color: #28a745;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\nbutton[data-v-27e54601]:hover {\n  background-color: #218838;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.modifier-voyage[data-v-27e54601] {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n  border: 1px solid #ccc;\n  border-radius: 5px;\n  background-color: #f9f9f9;\n}\nh1[data-v-27e54601] {\n  text-align: center;\n  margin-bottom: 20px;\n}\n.form-group[data-v-27e54601] {\n  margin-bottom: 15px;\n}\nlabel[data-v-27e54601] {\n  display: block;\n  font-weight: bold;\n  margin-bottom: 5px;\n}\ninput[data-v-27e54601],\ntextarea[data-v-27e54601] {\n  width: 100%;\n  padding: 8px;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n.drag-drop-zone[data-v-27e54601] {\n  width: 100%;\n  padding: 20px;\n  border: 2px dashed #ccc;\n  border-radius: 5px;\n  text-align: center;\n  margin-bottom: 10px;\n  background-color: #f9f9f9;\n  cursor: pointer;\n}\n.drag-drop-zone.drag-over[data-v-27e54601] {\n  background-color: #e0f7fa;\n  border-color: #00796b;\n}\nbutton[data-v-27e54601] {\n  display: block;\n  width: 100%;\n  padding: 10px;\n  background-color: #28a745;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\nbutton[data-v-27e54601]:hover {\n  background-color: #218838;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
