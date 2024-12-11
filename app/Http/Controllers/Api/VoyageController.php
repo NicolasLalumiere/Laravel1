@@ -86,31 +86,43 @@ class VoyageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $voyage = Voyage::findOrFail($id);
-        if (!$voyage) {
-            return response() ->json(['message' => 'Id not found'], 404);
-        }
-        $validator = Validator::make($request->all(),[
-            'user_id' => 'required',
-            'pays'=> 'required',
-            'jours'=> 'required',
-            'photo'=> 'nullable|image|mimes:jpg,png,jpeg,gif,svg',
-        ]);
-        if ($validator->fails()) {
-            return response() ->json(['success' => false, 'message' => $validator->errors()], 400);
-        }
- 
-        if ($request->hasfile('photo')) {
-            $image = $request->photo;
-            $path = $request->photo->storeAs('images/upload', 'public');
-            $article['photo'] = $path;
-    
-        }
-        $voyage->update($request->except('photo'));
-
-        return response()->json([$voyage,"message" => "Article modifé avec succees" ] );
+{
+    dd($request->all());
+    $voyage = Voyage::find($id);
+    if (!$voyage) {
+        return response()->json(['message' => 'Voyage non trouvé'], 404);
     }
+
+    $validator = Validator::make($request->all(), [
+        'user_id' => 'required|exists:users,id',
+        'pays' => 'required|string|max:255',
+        'jours' => 'required|integer|min:1',
+        'photo' => 'nullable|file|mimes:jpg,jpeg,png,gif,svg|max:2048',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['message' => $validator->errors()], 400);
+    }
+
+    $voyage->user_id = $request->input('user_id');
+    $voyage->pays = $request->input('pays');
+    $voyage->jours = $request->input('jours');
+
+    // Gérer la photo si elle est envoyée
+    if ($request->hasFile('photo')) {
+        if ($voyage->photo && Storage::exists('public/' . $voyage->photo)) {
+            Storage::delete('public/' . $voyage->photo);
+        }
+
+        $photoPath = $request->file('photo')->store('images/upload', 'public');
+        $voyage->photo = $photoPath; // Stocker le chemin en tant que string
+    }
+
+    $voyage->save();
+
+    return response()->json(['message' => 'Voyage mis à jour avec succès', 'voyage' => $voyage], 200);
+}
+
 
     /**
      * Remove the specified resource from storage.

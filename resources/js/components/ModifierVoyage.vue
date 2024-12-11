@@ -35,22 +35,27 @@
       };
     },
     methods: {
-      handleFileUpload(event) {
-        const file = event.target.files[0];
-        this.voyage.photo = file;
-      },
+        handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    console.log("Fichier sélectionné :", file.name);
+    this.voyage.photo = file;
+  }
+},
       async modifierVoyage() {
     try {
         await this.$axios.get("/sanctum/csrf-cookie");
 
-        const formData = new FormData();
         const userId = this.$store.state.user.id;
+        const formData = new FormData();
+        formData.append("_method", "PUT"); // Indiquez à Laravel que cette requête est une mise à jour
         formData.append("user_id", userId);
         formData.append("pays", this.voyage.pays);
-        formData.append("jours", parseInt(this.voyage.jours, 10));
+        formData.append("jours", String(this.voyage.jours));
         if (this.voyage.photo) {
             formData.append("photo", this.voyage.photo);
         }
+
 
         // Afficher les données de FormData dans la console pour déboguer
         for (let [key, value] of formData.entries()) {
@@ -61,7 +66,8 @@
         const response = await this.$axios.put(`/api/update/${voyageId}`, formData, {
             headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            Accept: 'application/json'
             },
         });
 

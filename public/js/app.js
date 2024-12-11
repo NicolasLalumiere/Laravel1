@@ -2219,12 +2219,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   methods: {
     handleFileUpload: function handleFileUpload(event) {
       var file = event.target.files[0];
-      this.voyage.photo = file;
+      if (file) {
+        console.log("Fichier sélectionné :", file.name);
+        this.voyage.photo = file;
+      }
     },
     modifierVoyage: function modifierVoyage() {
       var _this = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var formData, userId, _iterator, _step, _step$value, key, value, voyageId, response;
+        var userId, formData, _iterator, _step, _step$value, key, value, voyageId, response;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -2232,11 +2235,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context.next = 3;
               return _this.$axios.get("/sanctum/csrf-cookie");
             case 3:
-              formData = new FormData();
               userId = _this.$store.state.user.id;
+              formData = new FormData();
+              formData.append("_method", "PUT"); // Indiquez à Laravel que cette requête est une mise à jour
               formData.append("user_id", userId);
               formData.append("pays", _this.voyage.pays);
-              formData.append("jours", parseInt(_this.voyage.jours, 10));
+              formData.append("jours", String(_this.voyage.jours));
               if (_this.voyage.photo) {
                 formData.append("photo", _this.voyage.photo);
               }
@@ -2254,28 +2258,29 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 _iterator.f();
               }
               voyageId = _this.$route.params.id;
-              _context.next = 14;
+              _context.next = 15;
               return _this.$axios.put("/api/update/".concat(voyageId), formData, {
                 headers: {
                   Authorization: "Bearer ".concat(localStorage.getItem("token")),
-                  'Content-Type': 'multipart/form-data'
+                  'Content-Type': 'multipart/form-data',
+                  Accept: 'application/json'
                 }
               });
-            case 14:
+            case 15:
               response = _context.sent;
               console.log("Voyage mis à jour :", response.data);
               _this.$router.push("/voyages");
-              _context.next = 22;
+              _context.next = 23;
               break;
-            case 19:
-              _context.prev = 19;
+            case 20:
+              _context.prev = 20;
               _context.t0 = _context["catch"](0);
               console.error("Erreur lors de la modification du voyage :", _context.t0);
-            case 22:
+            case 23:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 19]]);
+        }, _callee, null, [[0, 20]]);
       }))();
     }
   },
